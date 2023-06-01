@@ -2,7 +2,7 @@ package com.example.ClassesBookings.model;
 
 import java.util.ArrayList;
 
-public class Class {
+public class GymClass{
     private String name;
     private String date;
     private int capacity;
@@ -10,11 +10,11 @@ public class Class {
 
     private ArrayList<Member> bookings;
 
-    public Class(){
+    public GymClass(){
 
     }
 
-    public Class(String name, String date, int capacity){
+    public GymClass(String name, String date, int capacity){
         this.name = name;
         this.date = date;
         this.capacity = capacity;
