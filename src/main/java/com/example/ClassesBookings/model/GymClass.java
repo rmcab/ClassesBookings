@@ -2,9 +2,20 @@ package com.example.ClassesBookings.model;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class GymClass{
+
+    @Schema(name = "name", type = "string", format="string", description = "The Class Name", required = true, example = "Pilates")
+    @JsonProperty("name")
     private String name;
+    @Schema(name = "date", type = "string", format="string",  description = "The Class Date", required = true, example = "06/01/2023")
+    @JsonProperty("date")
     private String date;
+
+    @Schema(name = "capacity", type = "int", format="double", description = "The Class Capacity", required = true, example = "20")
+    @JsonProperty("capacity")
     private int capacity;
 
 
