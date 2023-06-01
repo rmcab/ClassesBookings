@@ -17,7 +17,7 @@ public class GymClassController {
     private GymClassService service;
 
     @GetMapping
-    public List<GymClass> getClasses(@RequestParam String name, @RequestParam String date){
+    public List<GymClass> getClasses(@RequestParam(name="name",required=false) String name, @RequestParam(name="date",required=false) String date){
         //needs to validate date format; If date format is invalid give error message;
 
         return service.findClasses(name, date);
