@@ -31,7 +31,7 @@ public class GymClassService {
     //falta verificar se para aquele intervalo de datas já existe alguma aula;
     public List<GymClass> postClasses(ClassParams params, Date parsedStartDate, Date parsedEndDate){
 
-        Long daysBetween = Utils.getDaysBetweenDates(Utils.convertToLocalDateTime(parsedStartDate), Utils.convertToLocalDateTime(parsedEndDate));
+        Long daysBetween = Utils.getDaysBetweenDates(Utils.convertToLocalDateTime(parsedStartDate), Utils.convertToLocalDateTime(parsedEndDate)) + 1 ;
 
         for(int i = 0; i < daysBetween; i++){
             GymClass gymClass = setGymClass(params, DateUtils.addDays(parsedStartDate, i));
@@ -46,6 +46,7 @@ public class GymClassService {
         gymClass.setName(params.getName());
         gymClass.setCapacity(params.getCapacity());
         gymClass.setDate(Utils.getParsedStringFromDate(date));
+        gymClass.setBookings(new ArrayList<>());
 
         return gymClass;
 
@@ -59,9 +60,11 @@ public class GymClassService {
 
 
 
+
+
     /*--------------------------------------------------validations-----------------------------------*/
     public boolean validClassParams(ClassParams classParams){
-        return this.validClassBasicParams(classParams) && this.validClassDateParams(classParams);
+        return validClassBasicParams(classParams) && validClassDateParams(classParams);
     }
 
 
@@ -73,7 +76,6 @@ public class GymClassService {
     public boolean validClassDateParams(ClassParams classParams){
         return (Utils.isNotNullOrEmptyString(classParams.getStartDate()) && Utils.getParsedDate(classParams.getStartDate()) != null)
                 && (Utils.isNotNullOrEmptyString(classParams.getEndDate()) && Utils.getParsedDate(classParams.getEndDate()) != null);
-
     }
 
 

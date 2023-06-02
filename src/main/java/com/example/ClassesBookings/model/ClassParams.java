@@ -8,11 +8,11 @@ public class ClassParams {
     @Schema(name = "name", type = "string",  description = "The class name", required = true, example = "Pilates")
     @JsonProperty("name")
     private String name;
-    @Schema(name = "startDate", type = "string",  description = "The class start date", required = true, example = "06/01/2023")
+    @Schema(name = "startDate", type = "string",  description = "The class start date (dd-MM-yyyy)", required = true, example = "06-01-2023")
     @JsonProperty("startDate")
     private String startDate;
 
-    @Schema(name = "endDate", type = "string",  description = "The class end date", required = true, example = "06/01/2023")
+    @Schema(name = "endDate", type = "string",  description = "The class end date (dd-MM-yyyy)", required = true, example = "06-01-2023")
     @JsonProperty("endDate")
     private String endDate;
 

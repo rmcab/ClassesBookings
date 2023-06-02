@@ -10,7 +10,7 @@ public class GymClass{
     @Schema(name = "name", type = "string",  description = "The class name", required = true, example = "Pilates")
     @JsonProperty("name")
     private String name;
-    @Schema(name = "date", type = "string",  description = "The class date", required = true, example = "06/01/2023")
+    @Schema(name = "date", type = "string",  description = "The class date", required = true, example = "06-01-2023")
     @JsonProperty("date")
     private String date;
 

@@ -34,10 +34,11 @@ public class GymClassController {
     @GetMapping
     public ResponseEntity<Object> getClasses(@RequestParam(name = "name", required = false) String name, @RequestParam(name = "date", required = false) String date) {
 
+
         try {
             if (Utils.isNotNullOrEmptyString(date) && Utils.getParsedDate(date) == null) {
                 return new ResponseEntity<>(
-                        "Invalid Date Format - Expected format: MM-DD-YYYY",
+                        "Invalid Date Format - Expected format: dd-MM-yyyy",
                         HttpStatus.BAD_REQUEST);
             }
 
@@ -58,7 +59,7 @@ public class GymClassController {
             if (!service.validClassParams(classParams)) {
                 return new ResponseEntity<>(
                         "Invalid Input Format - Class name, capacity, start and end date are mandatory;" +
-                                " Expected format for dates: MM-DD-YYYY",
+                                " Expected format for dates: dd-MM-yyyy",
                         HttpStatus.BAD_REQUEST);
             }
 
@@ -67,7 +68,7 @@ public class GymClassController {
 
             if (parsedStartDate.after(parsedEndDate)) {
                 return new ResponseEntity<>(
-                        "Invalid Date- Start Date must be previous to End Date - Expected format: MM-DD-YYYY",
+                        "Invalid Date- Start Date must be previous to End Date - Expected format: dd-MM-yyyy",
                         HttpStatus.BAD_REQUEST);
             }
 

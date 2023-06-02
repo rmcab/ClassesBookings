@@ -13,7 +13,7 @@ public class Utils {
     }
 
     public static Date getParsedDate (String dateString){
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
         dateFormatter.setLenient(false);
         Date date = null;
         try{
@@ -25,7 +25,7 @@ public class Utils {
     }
 
     public static String getParsedStringFromDate(Date date){
-        String pattern = "MM-dd-yyyy";
+        String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         return simpleDateFormat.format(date);
     }
