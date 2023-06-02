@@ -39,32 +39,33 @@ public class BookingController {
 
         try {
 
-            if  (!Utils.isNotNullOrEmptyString(name) || !Utils.isNotNullOrEmptyString(date)){
+            if (!Utils.isNotNullOrEmptyString(name) || !Utils.isNotNullOrEmptyString(date)) {
                 return new ResponseEntity<>(
                         "Invalid Input Format - Member name and date of booking are mandatory",
                         HttpStatus.BAD_REQUEST);
             }
 
-            if(Utils.getParsedDate(date) == null){
+            if (Utils.getParsedDate(date) == null) {
                 return new ResponseEntity<>(
                         "Invalid Date Format - Expected format: dd-MM-yyyy",
                         HttpStatus.BAD_REQUEST);
             }
 
-            List<GymClass> listToAdd = serviceClass.findClasses(null, date);
-            if (listToAdd == null || listToAdd.size() == 0) {
+            List<GymClass> list = serviceClass.findClasses(null, date);
+            if (list == null || list.size() == 0) {
                 return new ResponseEntity<>(
                         "Not Found - No Classes found for " + date,
                         HttpStatus.NOT_FOUND);
             }
 
-            if(listToAdd.stream().filter(elem -> elem.getBookings().contains(name)).findAny().orElse(null) != null){
+            GymClass classWBookingToAdd = list.get(0).getBookings() != null && list.get(0).getBookings().contains(name) ? null : list.get(0);
+            if (classWBookingToAdd == null) {
                 return new ResponseEntity<>(
                         "Couldn't create booking. Member is already booked in for " + date,
                         HttpStatus.BAD_REQUEST);
             }
 
-            return new ResponseEntity<>(service.createBooking(name, listToAdd), HttpStatus.OK);
+            return new ResponseEntity<>(service.createBooking(name, classWBookingToAdd), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(
@@ -73,6 +74,51 @@ public class BookingController {
         }
     }
 
+    @Operation(summary = "Deletes a booking of a member in a given date for existing classes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Bad request - Invalid request"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    @DeleteMapping
+    public ResponseEntity<Object> deleteBooking(@RequestParam(name = "name", required = true) String name, @RequestParam(name = "date", required = true) String date) {
+
+        try {
+
+            if (!Utils.isNotNullOrEmptyString(name) || !Utils.isNotNullOrEmptyString(date)) {
+                return new ResponseEntity<>(
+                        "Invalid Input Format - Member name and date of booking are mandatory",
+                        HttpStatus.BAD_REQUEST);
+            }
+
+            if (Utils.getParsedDate(date) == null) {
+                return new ResponseEntity<>(
+                        "Invalid Date Format - Expected format: dd-MM-yyyy",
+                        HttpStatus.BAD_REQUEST);
+            }
+
+            List<GymClass> list = serviceClass.findClasses(null, date);
+            if (list == null || list.size() == 0) {
+                return new ResponseEntity<>(
+                        "Not Found - No Classes found for " + date,
+                        HttpStatus.NOT_FOUND);
+            }
+
+            GymClass classWBookingToRemove = list.get(0).getBookings() != null && list.get(0).getBookings().contains(name) ? list.get(0) : null;
+            if (classWBookingToRemove == null) {
+                return new ResponseEntity<>(
+                        "Not Found - No Bookings found for " + date,
+                        HttpStatus.NOT_FOUND);
+            }
+
+            return new ResponseEntity<>(service.deleteBooking(name, classWBookingToRemove), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    GENERIC_ERROR_MESSAGE,
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

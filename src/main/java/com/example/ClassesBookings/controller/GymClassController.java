@@ -118,7 +118,7 @@ public class GymClassController {
                         HttpStatus.NOT_FOUND);
             }
 
-            return new ResponseEntity<>(service.deleteClass(listToDelete), HttpStatus.OK);
+            return new ResponseEntity<>(service.deleteClass(listToDelete.get(0)), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(

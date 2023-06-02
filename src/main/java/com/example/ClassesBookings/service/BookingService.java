@@ -12,13 +12,21 @@ public class BookingService {
     @Autowired
     private GymClassRepository repo;
 
-    public List<GymClass> createBooking(String name, List<GymClass> listToAdd){
-        listToAdd.forEach(gymClass -> repo.updateClass(gymClass, setBooking(gymClass, name)));
-        return repo.getAllClasses();
+    public List<GymClass> createBooking(String name, GymClass gymClass){
+        return repo.updateClass(gymClass, setBooking(gymClass, name));
+    }
+
+    public List<GymClass> deleteBooking(String name, GymClass gymClass){
+        return repo.updateClass(gymClass, removeBooking(gymClass, name));
     }
 
     private GymClass setBooking(GymClass gymClass, String name){
         gymClass.getBookings().add(name);
+        return gymClass;
+    }
+
+    private GymClass removeBooking(GymClass gymClass, String name){
+        gymClass.getBookings().remove(name);
         return gymClass;
     }
 }

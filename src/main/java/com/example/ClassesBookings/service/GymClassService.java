@@ -66,9 +66,8 @@ public class GymClassService {
         return overlappingCLass != null;
     }
 
-    public List<GymClass> deleteClass(List<GymClass> listToDelete) {
-        listToDelete.forEach(elem -> repo.removeClass(elem));
-        return repo.getAllClasses();
+    public List<GymClass> deleteClass(GymClass gymClass) {
+        return repo.removeClass(gymClass);
     }
 
     public boolean validClassParams(ClassParams classParams) {

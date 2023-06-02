@@ -14,15 +14,18 @@ public class GymClassRepository {
 
     public void createClass(GymClass newClass) {
         this.classes.add(newClass);
+
     }
 
-    public void removeClass(GymClass toDeleteClass) {
+    public List<GymClass> removeClass(GymClass toDeleteClass) {
         this.classes.remove(toDeleteClass);
+        return getAllClasses();
     }
 
-    public void updateClass(GymClass existing, GymClass toUpdate){
+    public List<GymClass> updateClass(GymClass existing, GymClass toUpdate){
         int index = this.classes.indexOf(existing);
         this.classes.set(index, toUpdate);
+        return getAllClasses();
     }
 
 }
