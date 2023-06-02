@@ -75,12 +75,12 @@ public class GymClassService {
     }
 
 
-    public boolean validClassBasicParams(ClassParams classParams) {
+    private boolean validClassBasicParams(ClassParams classParams) {
         return Utils.isNotNullOrEmptyString(classParams.getName()) &&
                 (classParams.getCapacity() != null && classParams.getCapacity() > 0);
     }
 
-    public boolean validClassDateParams(ClassParams classParams) {
+    private boolean validClassDateParams(ClassParams classParams) {
         return (Utils.isNotNullOrEmptyString(classParams.getStartDate()) && Utils.getParsedDate(classParams.getStartDate()) != null)
                 && (Utils.isNotNullOrEmptyString(classParams.getEndDate()) && Utils.getParsedDate(classParams.getEndDate()) != null);
     }

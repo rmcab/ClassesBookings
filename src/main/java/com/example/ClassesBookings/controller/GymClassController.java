@@ -56,6 +56,7 @@ public class GymClassController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Bad request - Invalid request"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @PostMapping
@@ -82,7 +83,7 @@ public class GymClassController {
             if (service.isOverlappingClass(parsedStartDate, parsedEndDate)) {
                 return new ResponseEntity<>(
                         "Invalid Date Interval - There's one or more classes already registered in the given date interval",
-                        HttpStatus.BAD_REQUEST);
+                        HttpStatus.FORBIDDEN);
             }
 
             return new ResponseEntity<>(service.postClasses(classParams, parsedStartDate, parsedEndDate), HttpStatus.OK);
@@ -106,8 +107,11 @@ public class GymClassController {
 
         try {
             if (!Utils.isNotNullOrEmptyString(date) || Utils.getParsedDate(date) == null) {
+                String response = "Invalid Input Format - Date is Mandatory";
+                if (!Utils.isNotNullOrEmptyString(date))
+                    response = "Invalid Date Format - Expected format: dd-MM-yyyy";
                 return new ResponseEntity<>(
-                        "Invalid Date Format - Expected format: dd-MM-yyyy",
+                        response,
                         HttpStatus.BAD_REQUEST);
             }
 

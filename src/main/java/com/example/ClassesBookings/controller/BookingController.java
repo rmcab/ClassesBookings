@@ -38,24 +38,12 @@ public class BookingController {
     public ResponseEntity<Object> setBooking(@RequestParam(name = "name", required = true) String name, @RequestParam(name = "date", required = true) String date) {
 
         try {
-
-            if (!Utils.isNotNullOrEmptyString(name) || !Utils.isNotNullOrEmptyString(date)) {
-                return new ResponseEntity<>(
-                        "Invalid Input Format - Member name and date of booking are mandatory",
-                        HttpStatus.BAD_REQUEST);
-            }
-
-            if (Utils.getParsedDate(date) == null) {
-                return new ResponseEntity<>(
-                        "Invalid Date Format - Expected format: dd-MM-yyyy",
-                        HttpStatus.BAD_REQUEST);
-            }
-
             List<GymClass> list = serviceClass.findClasses(null, date);
-            if (list == null || list.size() == 0) {
-                return new ResponseEntity<>(
-                        "Not Found - No Classes found for " + date,
-                        HttpStatus.NOT_FOUND);
+
+            ResponseEntity<Object> res= validateBookingsRequests(name, date, list);
+
+            if(res != null){
+                return res;
             }
 
             GymClass classWBookingToAdd = list.get(0).getBookings() != null && list.get(0).getBookings().contains(name) ? null : list.get(0);
@@ -84,30 +72,18 @@ public class BookingController {
     public ResponseEntity<Object> deleteBooking(@RequestParam(name = "name", required = true) String name, @RequestParam(name = "date", required = true) String date) {
 
         try {
-
-            if (!Utils.isNotNullOrEmptyString(name) || !Utils.isNotNullOrEmptyString(date)) {
-                return new ResponseEntity<>(
-                        "Invalid Input Format - Member name and date of booking are mandatory",
-                        HttpStatus.BAD_REQUEST);
-            }
-
-            if (Utils.getParsedDate(date) == null) {
-                return new ResponseEntity<>(
-                        "Invalid Date Format - Expected format: dd-MM-yyyy",
-                        HttpStatus.BAD_REQUEST);
-            }
-
             List<GymClass> list = serviceClass.findClasses(null, date);
-            if (list == null || list.size() == 0) {
-                return new ResponseEntity<>(
-                        "Not Found - No Classes found for " + date,
-                        HttpStatus.NOT_FOUND);
+
+            ResponseEntity<Object> res= validateBookingsRequests(name, date, list);
+
+            if(res != null){
+                return res;
             }
 
             GymClass classWBookingToRemove = list.get(0).getBookings() != null && list.get(0).getBookings().contains(name) ? list.get(0) : null;
             if (classWBookingToRemove == null) {
                 return new ResponseEntity<>(
-                        "Not Found - No Bookings found for " + date,
+                        "Not Found - No Bookings found for " + name + "on" + date,
                         HttpStatus.NOT_FOUND);
             }
 
@@ -118,6 +94,27 @@ public class BookingController {
                     GENERIC_ERROR_MESSAGE,
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private ResponseEntity<Object> validateBookingsRequests(String name, String date, List<GymClass> list){
+        if (!Utils.isNotNullOrEmptyString(name) || !Utils.isNotNullOrEmptyString(date)) {
+            return new ResponseEntity<>(
+                    "Invalid Input Format - Member name and date of booking are mandatory",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        if (Utils.getParsedDate(date) == null) {
+            return new ResponseEntity<>(
+                    "Invalid Date Format - Expected format: dd-MM-yyyy",
+                    HttpStatus.BAD_REQUEST);
+        }
+        if (list == null || list.size() == 0) {
+            return new ResponseEntity<>(
+                    "Not Found - No Classes found for " + date,
+                    HttpStatus.NOT_FOUND);
+        }
+        return null;
+
     }
 
 
