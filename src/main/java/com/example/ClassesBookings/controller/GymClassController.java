@@ -108,7 +108,7 @@ public class GymClassController {
         try {
             if (!Utils.isNotNullOrEmptyString(date) || Utils.getParsedDate(date) == null) {
                 String response = "Invalid Input Format - Date is Mandatory";
-                if (!Utils.isNotNullOrEmptyString(date))
+                if (Utils.getParsedDate(date) == null)
                     response = "Invalid Date Format - Expected format: dd-MM-yyyy";
                 return new ResponseEntity<>(
                         response,

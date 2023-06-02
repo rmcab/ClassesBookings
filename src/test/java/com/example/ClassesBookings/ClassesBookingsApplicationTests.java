@@ -49,8 +49,8 @@ class ClassesBookingsApplicationTests {
     }
 
     private void testPostOverlappingClass() {
-        String requestBody2 = "{\"name\": \"Zumba\", \"startDate\": \"04-07-2023\", \"endDate\": \"12-07-2023\", \"capacity\": 30}";
-        ResponseEntity<String> testPostOverlappingClass = mockClient.exchange("/classes", HttpMethod.POST, genHttpEntityJson(requestBody2), String.class);
+        String requestBody = "{\"name\": \"Zumba\", \"startDate\": \"04-07-2023\", \"endDate\": \"12-07-2023\", \"capacity\": 30}";
+        ResponseEntity<String> testPostOverlappingClass = mockClient.exchange("/classes", HttpMethod.POST, genHttpEntityJson(requestBody), String.class);
         assertEquals("Error - POST overlapping class dates", HttpStatus.FORBIDDEN, testPostOverlappingClass.getStatusCode());
     }
 
@@ -66,7 +66,8 @@ class ClassesBookingsApplicationTests {
                 "{\"name\":\"Pilates\",\"date\":\"02-07-2023\",\"capacity\":30,\"bookings\":[]}," +
                 "{\"name\":\"Pilates\",\"date\":\"03-07-2023\",\"capacity\":30,\"bookings\":[]}," +
                 "{\"name\":\"Pilates\",\"date\":\"04-07-2023\",\"capacity\":30,\"bookings\":[]}]";
-        ResponseEntity<String> testPostOk = mockClient.exchange("/classes?date=05-07-2023", HttpMethod.DELETE, null, String.class);
+        String requestBody = "05-07-2023";
+        ResponseEntity<String> testPostOk = mockClient.exchange("/classes", HttpMethod.DELETE, genHttpEntityJson(requestBody) , String.class);
         assertEquals("Success - DELETE a class after POST request status code", HttpStatus.OK, testPostOk.getStatusCode());
         assertEquals("Success - DELETE a class after POST request response body", expectedDeleteResponse, testPostOk.getBody());
     }
@@ -114,19 +115,21 @@ class ClassesBookingsApplicationTests {
 
     @Test
     public void testDeleteNotFound() {
-        ResponseEntity<String> testPostOk = mockClient.exchange("/classes?date=05-07-2024", HttpMethod.DELETE, null, String.class);
+        String requestBody = "05-07-2024";
+        ResponseEntity<String> testPostOk = mockClient.exchange("/classes", HttpMethod.DELETE, genHttpEntityJson(requestBody), String.class);
         assertEquals("Success - DELETE a class on a day that there's no booked classes", HttpStatus.NOT_FOUND, testPostOk.getStatusCode());
     }
 
     @Test
     public void testDeleteInvalidDate() {
-        ResponseEntity<String> testPostOk = mockClient.exchange("/classes?date=2023-04-05", HttpMethod.DELETE, null, String.class);
+        String requestBody = "2023-04-05";
+        ResponseEntity<String> testPostOk = mockClient.exchange("/classes", HttpMethod.DELETE, genHttpEntityJson(requestBody), String.class);
         assertEquals("Error - DELETE a class with invalid date format", HttpStatus.BAD_REQUEST, testPostOk.getStatusCode());
     }
 
     @Test
     public void testDeleteNullDate() {
-        ResponseEntity<String> testPostOk = mockClient.exchange("/classes?date=null", HttpMethod.DELETE, null, String.class);
+        ResponseEntity<String> testPostOk = mockClient.exchange("/classes", HttpMethod.DELETE, null, String.class);
         assertEquals("Error - DELETE a class with a null date", HttpStatus.BAD_REQUEST, testPostOk.getStatusCode());
     }
 
