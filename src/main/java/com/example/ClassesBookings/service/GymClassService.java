@@ -32,9 +32,9 @@ public class GymClassService {
 
     private boolean filterClass(String name, String date, GymClass elem) {
         if ((Utils.isNotNullOrEmptyString(name)) && (Utils.isNotNullOrEmptyString(date))) {
-            return elem.getName().equals(name) && elem.getDate().equals(date);
+            return elem.getName().equalsIgnoreCase(name) && elem.getDate().equals(date);
         } else if (Utils.isNotNullOrEmptyString(name)) {
-            return elem.getName().equals(name);
+            return elem.getName().equalsIgnoreCase(name);
         } else {
             return elem.getDate().equals(date);
         }

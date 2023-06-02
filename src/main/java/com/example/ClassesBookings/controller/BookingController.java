@@ -50,7 +50,7 @@ public class BookingController {
                 return res;
             }
 
-            GymClass classWBookingToAdd = list.get(0).getBookings() != null && list.get(0).getBookings().contains(name) ? null : list.get(0);
+            GymClass classWBookingToAdd = list.get(0).getBookings() != null && list.get(0).getBookings().stream().anyMatch(elem -> elem.equalsIgnoreCase(name)) ? null : list.get(0);
             if (classWBookingToAdd == null) {
                 return new ResponseEntity<>(
                         "Couldn't create booking. Member is already booked in for " + date,
@@ -87,7 +87,7 @@ public class BookingController {
                 return res;
             }
 
-            GymClass classWBookingToRemove = list.get(0).getBookings() != null && list.get(0).getBookings().contains(name) ? list.get(0) : null;
+            GymClass classWBookingToRemove = list.get(0).getBookings() != null && list.get(0).getBookings().stream().anyMatch(elem -> elem.equalsIgnoreCase(name)) ? list.get(0) : null;
             if (classWBookingToRemove == null) {
                 return new ResponseEntity<>(
                         "Not Found - No Bookings found for " + name + "on" + date,
