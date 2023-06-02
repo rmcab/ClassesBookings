@@ -7,19 +7,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class GymClass{
 
-    @Schema(name = "name", type = "string", format="string", description = "The Class Name", required = true, example = "Pilates")
+    @Schema(name = "name", type = "string",  description = "The class name", required = true, example = "Pilates")
     @JsonProperty("name")
     private String name;
-    @Schema(name = "date", type = "string", format="string",  description = "The Class Date", required = true, example = "06/01/2023")
+    @Schema(name = "date", type = "string",  description = "The class date", required = true, example = "06/01/2023")
     @JsonProperty("date")
     private String date;
 
-    @Schema(name = "capacity", type = "int", format="double", description = "The Class Capacity", required = true, example = "20")
+    @Schema(name = "capacity", type = "int", description = "The class capacity", required = true, example = "20")
     @JsonProperty("capacity")
-    private int capacity;
+    private Integer capacity;
 
-
-    private ArrayList<Member> bookings;
+    @Schema(name = "bookings", type = "array",  description = "The class bookings", example = "['Michael']")
+    @JsonProperty("bookings")
+    private ArrayList<String> bookings;
 
     public GymClass(){
 
@@ -47,19 +48,19 @@ public class GymClass{
         this.date = date;
     }
 
-    public int getCapacity() {
+    public Integer getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
+    public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
 
-    public ArrayList<Member> getBookings() {
+    public ArrayList<String> getBookings() {
         return bookings;
     }
 
-    public void setBookings(ArrayList<Member> bookings) {
+    public void setBookings(ArrayList<String> bookings) {
         this.bookings = bookings;
     }
 
