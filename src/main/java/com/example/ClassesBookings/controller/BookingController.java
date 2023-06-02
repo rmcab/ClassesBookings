@@ -32,6 +32,7 @@ public class BookingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Bad request - Invalid request"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
 
@@ -53,7 +54,7 @@ public class BookingController {
             if (classWBookingToAdd == null) {
                 return new ResponseEntity<>(
                         "Couldn't create booking. Member is already booked in for " + date,
-                        HttpStatus.BAD_REQUEST);
+                        HttpStatus.FORBIDDEN);
             }
 
             return new ResponseEntity<>(service.createBooking(name, classWBookingToAdd), HttpStatus.OK);
@@ -69,6 +70,7 @@ public class BookingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Bad request - Invalid request"),
+            @ApiResponse(responseCode = "404", description = "Not Found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @DeleteMapping
