@@ -20,4 +20,9 @@ public class GymClassRepository {
         this.classes.remove(toDeleteClass);
     }
 
+    public void updateClass(GymClass existing, GymClass toUpdate){
+        int index = this.classes.indexOf(existing);
+        this.classes.set(index, toUpdate);
+    }
+
 }

@@ -1,4 +1,5 @@
 package com.example.ClassesBookings.controller;
+
 import com.example.ClassesBookings.model.ClassParams;
 import com.example.ClassesBookings.model.GymClass;
 import com.example.ClassesBookings.service.GymClassService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +20,6 @@ import java.util.List;
 public class GymClassController {
 
     public static final String GENERIC_ERROR_MESSAGE = "An unexpected error has occurred. Please try again later";
-
 
     @Autowired
     private GymClassService service;
@@ -33,7 +34,6 @@ public class GymClassController {
 
     @GetMapping
     public ResponseEntity<Object> getClasses(@RequestParam(name = "name", required = false) String name, @RequestParam(name = "date", required = false) String date) {
-
 
         try {
             if (Utils.isNotNullOrEmptyString(date) && Utils.getParsedDate(date) == null) {
@@ -51,7 +51,7 @@ public class GymClassController {
         }
     }
 
-    @Operation(summary = "Posts classes, use same start and end date to create a single class or a date interval to create multiple, subsequent classes. There can only be one class per day."
+    @Operation(summary = "Posts classes, use same start and end date to create a single class or a date interval to create multiple, subsequent classes. There can only be one class per day"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
@@ -79,7 +79,7 @@ public class GymClassController {
                         HttpStatus.BAD_REQUEST);
             }
 
-            if(service.isOverlappingClass(parsedStartDate, parsedEndDate)){
+            if (service.isOverlappingClass(parsedStartDate, parsedEndDate)) {
                 return new ResponseEntity<>(
                         "Invalid Date Interval - There's one or more classes already registered in the given date interval",
                         HttpStatus.BAD_REQUEST);
@@ -102,7 +102,7 @@ public class GymClassController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @DeleteMapping
-    public ResponseEntity<Object> deleteClass(@RequestParam(name = "date", required = true) String date){
+    public ResponseEntity<Object> deleteClass(@RequestParam(name = "date", required = true) String date) {
 
         try {
             if (!Utils.isNotNullOrEmptyString(date) || Utils.getParsedDate(date) == null) {
@@ -112,7 +112,7 @@ public class GymClassController {
             }
 
             List<GymClass> listToDelete = service.findClasses(null, date);
-            if(listToDelete == null || listToDelete.size() == 0){
+            if (listToDelete == null || listToDelete.size() == 0) {
                 return new ResponseEntity<>(
                         "Not Found - No Classes found for " + date,
                         HttpStatus.NOT_FOUND);
@@ -120,7 +120,7 @@ public class GymClassController {
 
             return new ResponseEntity<>(service.deleteClass(listToDelete), HttpStatus.OK);
 
-        } catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(
                     GENERIC_ERROR_MESSAGE,
                     HttpStatus.INTERNAL_SERVER_ERROR);
