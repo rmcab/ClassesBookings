@@ -103,7 +103,7 @@ public class GymClassController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @DeleteMapping
-    public ResponseEntity<Object> deleteClass(@RequestParam(name = "date", required = true) String date) {
+    public ResponseEntity<Object> deleteClass(@RequestBody String date) {
 
         try {
             if (!Utils.isNotNullOrEmptyString(date) || Utils.getParsedDate(date) == null) {

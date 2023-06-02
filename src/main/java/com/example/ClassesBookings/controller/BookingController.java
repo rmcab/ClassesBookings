@@ -1,5 +1,6 @@
 package com.example.ClassesBookings.controller;
 
+import com.example.ClassesBookings.model.BookingParams;
 import com.example.ClassesBookings.model.GymClass;
 import com.example.ClassesBookings.service.BookingService;
 import com.example.ClassesBookings.service.GymClassService;
@@ -35,9 +36,11 @@ public class BookingController {
     })
 
     @PostMapping
-    public ResponseEntity<Object> setBooking(@RequestParam(name = "name", required = true) String name, @RequestParam(name = "date", required = true) String date) {
+    public ResponseEntity<Object> setBooking(@RequestBody BookingParams bookingParams) {
 
         try {
+            String name = bookingParams.getName();
+            String date = bookingParams.getDate();
             List<GymClass> list = serviceClass.findClasses(null, date);
 
             ResponseEntity<Object> res= validateBookingsRequests(name, date, list);
@@ -69,9 +72,11 @@ public class BookingController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @DeleteMapping
-    public ResponseEntity<Object> deleteBooking(@RequestParam(name = "name", required = true) String name, @RequestParam(name = "date", required = true) String date) {
+    public ResponseEntity<Object> deleteBooking(@RequestBody BookingParams bookingParams) {
 
         try {
+            String name = bookingParams.getName();
+            String date = bookingParams.getDate();
             List<GymClass> list = serviceClass.findClasses(null, date);
 
             ResponseEntity<Object> res= validateBookingsRequests(name, date, list);
