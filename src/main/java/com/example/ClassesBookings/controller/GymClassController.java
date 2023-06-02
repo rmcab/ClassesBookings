@@ -42,7 +42,7 @@ public class GymClassController {
                         HttpStatus.BAD_REQUEST);
             }
 
-            return new ResponseEntity<>(service.findClasses(name, date), HttpStatus.OK);
+            return new ResponseEntity<>(service.getClasses(name, date), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(
@@ -68,11 +68,15 @@ public class GymClassController {
 
             if (parsedStartDate.after(parsedEndDate)) {
                 return new ResponseEntity<>(
-                        "Invalid Date- Start Date must be previous to End Date - Expected format: dd-MM-yyyy",
+                        "Invalid Date - Start Date must be previous to End Date - Expected format: dd-MM-yyyy",
                         HttpStatus.BAD_REQUEST);
             }
 
-            //Falta validar se já existem aulas para aquele intervalo;
+            if(service.isOverlappingClass(parsedStartDate, parsedEndDate)){
+                return new ResponseEntity<>(
+                        "Invalid Date Interval - There's one or more classes already registered in the given date interval",
+                        HttpStatus.BAD_REQUEST);
+            }
 
             return new ResponseEntity<>(service.postClasses(classParams, parsedStartDate, parsedEndDate), HttpStatus.OK);
 

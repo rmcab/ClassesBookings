@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GymClassService {
@@ -20,22 +21,38 @@ public class GymClassService {
 
 
     /*--------------------------------------------------gets-------------------------------------------*/
-    public List<GymClass> findClasses(String name, String date){
+    public List<GymClass> getClasses(String name, String date){
         if(Utils.isNotNullOrEmptyString(name) || Utils.isNotNullOrEmptyString(date))
-            return repo.findClasses(name, date);
+            return findClasses(name, date);
         else
             return repo.getAllClasses();
     }
 
+    public List<GymClass> findClasses(String name, String date){
+        List<GymClass> filteredClasses = repo.getAllClasses().stream().filter(elem -> filterClass(name, date, elem)).collect(Collectors.toList());
+        return filteredClasses;
+    }
+
+    private boolean filterClass(String name, String date, GymClass elem){
+        if( (Utils.isNotNullOrEmptyString(name)) && (Utils.isNotNullOrEmptyString(date)) ){
+            return elem.getName().equals(name) && elem.getDate().equals(date);
+        } else if(Utils.isNotNullOrEmptyString(name)){
+            return elem.getName().equals(name);
+        } else {
+            return elem.getDate().equals(date);
+        }
+    }
+
     /*-------------------------------------------------post---------------------------------------------*/
-    //falta verificar se para aquele intervalo de datas já existe alguma aula;
+
+
     public List<GymClass> postClasses(ClassParams params, Date parsedStartDate, Date parsedEndDate){
 
         Long daysBetween = Utils.getDaysBetweenDates(Utils.convertToLocalDateTime(parsedStartDate), Utils.convertToLocalDateTime(parsedEndDate)) + 1 ;
 
         for(int i = 0; i < daysBetween; i++){
             GymClass gymClass = setGymClass(params, DateUtils.addDays(parsedStartDate, i));
-            repo.getAllClasses().add(gymClass);
+            repo.createClass(gymClass);
         }
 
         return repo.getAllClasses();
@@ -47,9 +64,12 @@ public class GymClassService {
         gymClass.setCapacity(params.getCapacity());
         gymClass.setDate(Utils.getParsedStringFromDate(date));
         gymClass.setBookings(new ArrayList<>());
-
         return gymClass;
+    }
 
+    public boolean isOverlappingClass(Date parsedStartDate, Date parsedEndDate){
+        GymClass overlappingCLass = repo.getAllClasses().stream().filter(elem -> Utils.isWithinDates(parsedStartDate , parsedEndDate, Utils.getParsedDate(elem.getDate()))).findAny().orElse(null);
+        return overlappingCLass != null;
     }
 
 
@@ -63,6 +83,8 @@ public class GymClassService {
 
 
     /*--------------------------------------------------validations-----------------------------------*/
+
+
     public boolean validClassParams(ClassParams classParams){
         return validClassBasicParams(classParams) && validClassDateParams(classParams);
     }

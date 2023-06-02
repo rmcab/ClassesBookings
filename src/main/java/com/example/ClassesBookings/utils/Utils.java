@@ -38,4 +38,8 @@ public class Utils {
     public static Long getDaysBetweenDates(LocalDateTime startDate, LocalDateTime endDate){
         return Duration.between(startDate, endDate).toDays();
     }
+
+    public static boolean isWithinDates(Date parsedStartDate, Date parsedEndDate, Date goalDate){
+            return goalDate.equals(parsedStartDate) || goalDate.equals(parsedEndDate) || (goalDate.after(parsedStartDate) && goalDate.before(parsedEndDate));
+    }
 }
