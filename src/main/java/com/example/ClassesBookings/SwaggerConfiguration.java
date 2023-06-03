@@ -1,5 +1,4 @@
 package com.example.ClassesBookings;
-
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
@@ -7,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-public class SwaggerConfiguration {
+public class SwaggerConfiguration  {
 
     @Bean
     public OpenAPI customOpenAPI() {
@@ -16,7 +15,6 @@ public class SwaggerConfiguration {
                         .title("Glofox Tech Task")
                         .version("1.0")
                         .description("Created by Raul Bartolo"));
-
-
     }
+
 }

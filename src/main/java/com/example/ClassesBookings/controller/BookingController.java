@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,37 +34,35 @@ public class BookingController {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Bad request - Invalid request"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Not Found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
 
     @PostMapping
-    public ResponseEntity<Object> setBooking(@RequestBody BookingParams bookingParams) {
+    public ResponseEntity<List<GymClass>> setBooking(@RequestBody BookingParams bookingParams) {
 
         try {
             String name = bookingParams.getName();
             String date = bookingParams.getDate();
             List<GymClass> list = serviceClass.findClasses(null, date);
-
-            ResponseEntity<Object> res= validateBookingsRequests(name, date, list);
-
-            if(res != null){
-                return res;
-            }
+            validateBookingsRequests(name, date, list);
 
             GymClass classWBookingToAdd = list.get(0).getBookings() != null && list.get(0).getBookings().stream().anyMatch(elem -> elem.equalsIgnoreCase(name)) ? null : list.get(0);
             if (classWBookingToAdd == null) {
-                return new ResponseEntity<>(
-                        "Couldn't create booking. Member is already booked in for " + date,
-                        HttpStatus.FORBIDDEN);
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Couldn't create booking. Member is already booked in for " + date) ;
             }
 
             return new ResponseEntity<>(service.createBooking(name, classWBookingToAdd), HttpStatus.OK);
 
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    GENERIC_ERROR_MESSAGE,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        catch (Exception e) {
+            if (e instanceof ResponseStatusException) {
+                throw (ResponseStatusException) e;
+            } else {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, GENERIC_ERROR_MESSAGE);
+            }
+        }
+
     }
 
     @Operation(summary = "Deletes a booking of a member in a given date for existing classes")
@@ -74,54 +73,44 @@ public class BookingController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @DeleteMapping
-    public ResponseEntity<Object> deleteBooking(@RequestBody BookingParams bookingParams) {
+    public ResponseEntity<List<GymClass>> deleteBooking(@RequestBody BookingParams bookingParams) {
 
         try {
             String name = bookingParams.getName();
             String date = bookingParams.getDate();
             List<GymClass> list = serviceClass.findClasses(null, date);
-
-            ResponseEntity<Object> res= validateBookingsRequests(name, date, list);
-
-            if(res != null){
-                return res;
-            }
+            validateBookingsRequests(name, date, list);
 
             GymClass classWBookingToRemove = list.get(0).getBookings() != null && list.get(0).getBookings().stream().anyMatch(elem -> elem.equalsIgnoreCase(name)) ? list.get(0) : null;
             if (classWBookingToRemove == null) {
-                return new ResponseEntity<>(
-                        "Not Found - No Bookings found for " + name + "on" + date,
-                        HttpStatus.NOT_FOUND);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found - No Bookings found for " + name + "on" + date);
             }
 
             return new ResponseEntity<>(service.deleteBooking(name, classWBookingToRemove), HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    GENERIC_ERROR_MESSAGE,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            if (e instanceof ResponseStatusException) {
+                throw (ResponseStatusException) e;
+            } else {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, GENERIC_ERROR_MESSAGE);
+            }
         }
     }
 
-    private ResponseEntity<Object> validateBookingsRequests(String name, String date, List<GymClass> list){
+    private void validateBookingsRequests(String name, String date, List<GymClass> list){
         if (!Utils.isNotNullOrEmptyString(name) || !Utils.isNotNullOrEmptyString(date)) {
-            return new ResponseEntity<>(
-                    "Invalid Input Format - Member name and date of booking are mandatory",
-                    HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid Input Format - Member name and date of booking are mandatory");
         }
 
         if (Utils.getParsedDate(date) == null) {
-            return new ResponseEntity<>(
-                    "Invalid Date Format - Expected format: dd-MM-yyyy",
-                    HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid Date Format - Expected format: dd-MM-yyyy");
         }
         if (list == null || list.size() == 0) {
-            return new ResponseEntity<>(
-                    "Not Found - No Classes found for " + date,
-                    HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Not Found - No Classes found for " + date);
         }
-        return null;
-
     }
 
 

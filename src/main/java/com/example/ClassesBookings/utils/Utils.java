@@ -1,5 +1,5 @@
 package com.example.ClassesBookings.utils;
-import org.apache.commons.lang3.time.DateUtils;
+
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -42,4 +42,5 @@ public class Utils {
     public static boolean isWithinDates(Date parsedStartDate, Date parsedEndDate, Date goalDate){
             return goalDate.equals(parsedStartDate) || goalDate.equals(parsedEndDate) || (goalDate.after(parsedStartDate) && goalDate.before(parsedEndDate));
     }
+
 }

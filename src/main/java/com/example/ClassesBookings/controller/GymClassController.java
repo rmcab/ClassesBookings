@@ -2,7 +2,7 @@ package com.example.ClassesBookings.controller;
 
 import com.example.ClassesBookings.model.ClassParams;
 import com.example.ClassesBookings.model.GymClass;
-import com.example.ClassesBookings.service.GymClassService;
+import com.example.ClassesBookings.service.GymClassServiceImpl;
 import com.example.ClassesBookings.utils.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,7 @@ public class GymClassController {
     public static final String GENERIC_ERROR_MESSAGE = "An unexpected error has occurred. Please try again later";
 
     @Autowired
-    private GymClassService service;
+    private GymClassServiceImpl service;
 
     @Operation(summary = "Gets classes with optional search parameters"
     )
@@ -33,21 +34,21 @@ public class GymClassController {
     })
 
     @GetMapping
-    public ResponseEntity<Object> getClasses(@RequestParam(name = "name", required = false) String name, @RequestParam(name = "date", required = false) String date) {
+    public ResponseEntity<List<GymClass>> getClasses(@RequestParam(name = "name", required = false) String name, @RequestParam(name = "date", required = false) String date) {
 
         try {
             if (Utils.isNotNullOrEmptyString(date) && Utils.getParsedDate(date) == null) {
-                return new ResponseEntity<>(
-                        "Invalid Date Format - Expected format: dd-MM-yyyy",
-                        HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Date Format - Expected format: dd-MM-yyyy");
             }
 
             return new ResponseEntity<>(service.getClasses(name, date), HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    GENERIC_ERROR_MESSAGE,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            if (e instanceof ResponseStatusException) {
+                throw (ResponseStatusException) e;
+            } else {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, GENERIC_ERROR_MESSAGE);
+            }
         }
     }
 
@@ -60,38 +61,34 @@ public class GymClassController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @PostMapping
-    public ResponseEntity<Object> putClasses(@RequestBody ClassParams classParams) {
+    public ResponseEntity<List<GymClass>> putClasses(@RequestBody ClassParams classParams) {
 
         try {
 
             if (!service.validClassParams(classParams)) {
-                return new ResponseEntity<>(
-                        "Invalid Input Format - Class name, capacity, start and end date are mandatory;" +
-                                " Expected format for dates: dd-MM-yyyy",
-                        HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Input Format - Class name, capacity, start and end date are mandatory;" +
+                        " Expected format for dates: dd-MM-yyyy");
             }
 
             Date parsedStartDate = Utils.getParsedDate(classParams.getStartDate());
             Date parsedEndDate = Utils.getParsedDate(classParams.getEndDate());
 
             if (parsedStartDate.after(parsedEndDate)) {
-                return new ResponseEntity<>(
-                        "Invalid Date - Start Date must be previous to End Date - Expected format: dd-MM-yyyy",
-                        HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Date - Start Date must be previous to End Date - Expected format: dd-MM-yyyy");
             }
 
             if (service.isOverlappingClass(parsedStartDate, parsedEndDate)) {
-                return new ResponseEntity<>(
-                        "Invalid Date Interval - There's one or more classes already registered in the given date interval",
-                        HttpStatus.FORBIDDEN);
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid Date Interval - There's one or more classes already registered in the given date interval");
             }
 
             return new ResponseEntity<>(service.postClasses(classParams, parsedStartDate, parsedEndDate), HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    GENERIC_ERROR_MESSAGE,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            if (e instanceof ResponseStatusException) {
+                throw (ResponseStatusException) e;
+            } else {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, GENERIC_ERROR_MESSAGE);
+            }
         }
     }
 
@@ -103,31 +100,30 @@ public class GymClassController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @DeleteMapping
-    public ResponseEntity<Object> deleteClass(@RequestBody String date) {
+    public ResponseEntity<List<GymClass>> deleteClass(@RequestBody String date) {
 
         try {
             if (!Utils.isNotNullOrEmptyString(date) || Utils.getParsedDate(date) == null) {
                 String response = "Invalid Input Format - Date is Mandatory";
                 if (Utils.getParsedDate(date) == null)
                     response = "Invalid Date Format - Expected format: dd-MM-yyyy";
-                return new ResponseEntity<>(
-                        response,
-                        HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,response);
             }
 
             List<GymClass> listToDelete = service.findClasses(null, date);
             if (listToDelete == null || listToDelete.size() == 0) {
-                return new ResponseEntity<>(
-                        "Not Found - No Classes found for " + date,
-                        HttpStatus.NOT_FOUND);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Not Found - No Classes found for " + date);
             }
 
             return new ResponseEntity<>(service.deleteClass(listToDelete.get(0)), HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(
-                    GENERIC_ERROR_MESSAGE,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            if (e instanceof ResponseStatusException) {
+                throw (ResponseStatusException) e;
+            } else {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, GENERIC_ERROR_MESSAGE);
+            }
         }
     }
 
