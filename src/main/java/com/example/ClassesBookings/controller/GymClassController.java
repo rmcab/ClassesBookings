@@ -23,7 +23,7 @@ public class GymClassController {
     @Autowired
     private GymClassServiceImpl service;
 
-    @Operation(summary = "Gets classes with optional search parameters"
+    @Operation(summary = "Gets classes with optional search parameters, name and date (dd-MM-yyyy)"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
@@ -50,7 +50,7 @@ public class GymClassController {
         }
     }
 
-    @Operation(summary = "Posts classes, use same start and end date to create a single class or a date interval to create multiple, subsequent classes. There can only be one class per day"
+    @Operation(summary = "Posts classes, use same start and end date to create a single class or a date (dd-MM-yyyy) interval to create multiple, subsequent classes. There can only be one class per day"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
@@ -90,7 +90,7 @@ public class GymClassController {
         }
     }
 
-    @Operation(summary = "Deletes an existing class on a given date")
+    @Operation(summary = "Deletes an existing class on a given date (dd-MM-yyyy)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Bad request - Invalid request"),

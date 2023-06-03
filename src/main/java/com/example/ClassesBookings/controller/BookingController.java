@@ -26,7 +26,7 @@ public class BookingController {
     @Autowired
     private BookingService service;
 
-    @Operation(summary = "Creates a booking in a given date for existing classes"
+    @Operation(summary = "Creates a booking in a given date (dd-MM-yyyy) for existing classes"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
@@ -63,7 +63,7 @@ public class BookingController {
 
     }
 
-    @Operation(summary = "Deletes a booking of a member in a given date for existing classes")
+    @Operation(summary = "Deletes a booking of a member in a given date (dd-MM-yyyy) for existing classes")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "400", description = "Bad request - Invalid request"),
