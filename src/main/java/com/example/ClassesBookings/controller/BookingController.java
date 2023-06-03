@@ -20,8 +20,6 @@ import java.util.List;
 @RequestMapping("/bookings")
 public class BookingController {
 
-    public static final String GENERIC_ERROR_MESSAGE = "An unexpected error has occurred. Please try again later";
-
     @Autowired
     private GymClassService serviceClass;
 
@@ -59,7 +57,7 @@ public class BookingController {
             if (e instanceof ResponseStatusException) {
                 throw (ResponseStatusException) e;
             } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, GENERIC_ERROR_MESSAGE);
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Utils.GENERIC_ERROR_MESSAGE);
             }
         }
 
@@ -92,7 +90,7 @@ public class BookingController {
             if (e instanceof ResponseStatusException) {
                 throw (ResponseStatusException) e;
             } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, GENERIC_ERROR_MESSAGE);
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Utils.GENERIC_ERROR_MESSAGE);
             }
         }
     }

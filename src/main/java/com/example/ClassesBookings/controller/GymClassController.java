@@ -20,8 +20,6 @@ import java.util.List;
 @RequestMapping("/classes")
 public class GymClassController {
 
-    public static final String GENERIC_ERROR_MESSAGE = "An unexpected error has occurred. Please try again later";
-
     @Autowired
     private GymClassServiceImpl service;
 
@@ -47,7 +45,7 @@ public class GymClassController {
             if (e instanceof ResponseStatusException) {
                 throw (ResponseStatusException) e;
             } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, GENERIC_ERROR_MESSAGE);
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Utils.GENERIC_ERROR_MESSAGE);
             }
         }
     }
@@ -87,7 +85,7 @@ public class GymClassController {
             if (e instanceof ResponseStatusException) {
                 throw (ResponseStatusException) e;
             } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, GENERIC_ERROR_MESSAGE);
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Utils.GENERIC_ERROR_MESSAGE);
             }
         }
     }
@@ -122,7 +120,7 @@ public class GymClassController {
             if (e instanceof ResponseStatusException) {
                 throw (ResponseStatusException) e;
             } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, GENERIC_ERROR_MESSAGE);
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Utils.GENERIC_ERROR_MESSAGE);
             }
         }
     }

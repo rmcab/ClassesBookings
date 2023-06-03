@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class Utils {
 
+    public static final String GENERIC_ERROR_MESSAGE = "An unexpected error has occurred. Please try again later";
     public static boolean isNotNullOrEmptyString(String s){
         return s != null && !"".equals(s);
     }
