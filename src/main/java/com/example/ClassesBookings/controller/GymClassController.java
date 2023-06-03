@@ -50,7 +50,7 @@ public class GymClassController {
         }
     }
 
-    @Operation(summary = "Posts classes, use same start and end date to create a single class or a date (dd-MM-yyyy) interval to create multiple, subsequent classes. There can only be one class per day"
+    @Operation(summary = "Posts classes, use same start and end date (dd-MM-yyyy) to create a single class or a date interval to create multiple, subsequent classes. There can only be one class per day"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
