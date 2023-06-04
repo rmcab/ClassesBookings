@@ -27,7 +27,7 @@ public class GymClassController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "400", description = "Bad request - Invalid request"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
 
@@ -54,7 +54,7 @@ public class GymClassController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "400", description = "Bad request - Invalid request"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
@@ -93,7 +93,7 @@ public class GymClassController {
     @Operation(summary = "Deletes an existing class on a given date (dd-MM-yyyy)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "400", description = "Bad request - Invalid request"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "404", description = "Not Found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
@@ -101,9 +101,10 @@ public class GymClassController {
     public ResponseEntity<List<GymClass>> deleteClass(@RequestBody String date) {
 
         try {
-            if (!Utils.isNotNullOrEmptyString(date) || Utils.getParsedDate(date) == null) {
+            Date dateParsed = Utils.getParsedDate(date);
+            if (!Utils.isNotNullOrEmptyString(date) || dateParsed == null) {
                 String response = "Invalid Input Format - Date is Mandatory";
-                if (Utils.getParsedDate(date) == null)
+                if (dateParsed == null)
                     response = "Invalid Date Format - Expected format: dd-MM-yyyy";
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,response);
             }

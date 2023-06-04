@@ -8,7 +8,7 @@ public class GymClass{
     @Schema(name = "name", type = "string",  description = "The class name", required = true, example = "Pilates")
     @JsonProperty("name")
     private String name;
-    @Schema(name = "date", type = "string",  description = "The class date", required = true, example = "01-07-2023")
+    @Schema(name = "date", type = "string",  description = "The class date (dd-MM-yyyy)", required = true, example = "01-07-2023")
     @JsonProperty("date")
     private String date;
 
@@ -20,15 +20,7 @@ public class GymClass{
     @JsonProperty("bookings")
     private ArrayList<String> bookings;
 
-    public GymClass(){
-
-    }
-
-    public GymClass(String name, String date, int capacity){
-        this.name = name;
-        this.date = date;
-        this.capacity = capacity;
-    }
+    public GymClass(){ }
 
     public String getName() {
         return name;

@@ -30,16 +30,6 @@ public class GymClassServiceImpl implements GymClassService {
         return filteredClasses;
     }
 
-    private boolean filterClass(String name, String date, GymClass elem) {
-        if ((Utils.isNotNullOrEmptyString(name)) && (Utils.isNotNullOrEmptyString(date))) {
-            return elem.getName().equalsIgnoreCase(name) && elem.getDate().equals(date);
-        } else if (Utils.isNotNullOrEmptyString(name)) {
-            return elem.getName().equalsIgnoreCase(name);
-        } else {
-            return elem.getDate().equals(date);
-        }
-    }
-
     public List<GymClass> postClasses(ClassParams params, Date parsedStartDate, Date parsedEndDate) {
 
         Long daysBetween = Utils.getDaysBetweenDates(Utils.convertToLocalDateTime(parsedStartDate), Utils.convertToLocalDateTime(parsedEndDate)) + 1;
@@ -50,15 +40,6 @@ public class GymClassServiceImpl implements GymClassService {
         }
 
         return repo.getAllClasses();
-    }
-
-    private GymClass setGymClass(ClassParams params, Date date) {
-        GymClass gymClass = new GymClass();
-        gymClass.setName(params.getName());
-        gymClass.setCapacity(params.getCapacity());
-        gymClass.setDate(Utils.getParsedStringFromDate(date));
-        gymClass.setBookings(new ArrayList<>());
-        return gymClass;
     }
 
     public boolean isOverlappingClass(Date parsedStartDate, Date parsedEndDate) {
@@ -74,7 +55,6 @@ public class GymClassServiceImpl implements GymClassService {
         return validClassBasicParams(classParams) && validClassDateParams(classParams);
     }
 
-
     private boolean validClassBasicParams(ClassParams classParams) {
         return Utils.isNotNullOrEmptyString(classParams.getName()) &&
                 (classParams.getCapacity() != null && classParams.getCapacity() > 0);
@@ -83,6 +63,25 @@ public class GymClassServiceImpl implements GymClassService {
     private boolean validClassDateParams(ClassParams classParams) {
         return (Utils.isNotNullOrEmptyString(classParams.getStartDate()) && Utils.getParsedDate(classParams.getStartDate()) != null)
                 && (Utils.isNotNullOrEmptyString(classParams.getEndDate()) && Utils.getParsedDate(classParams.getEndDate()) != null);
+    }
+
+    private GymClass setGymClass(ClassParams params, Date date) {
+        GymClass gymClass = new GymClass();
+        gymClass.setName(params.getName());
+        gymClass.setCapacity(params.getCapacity());
+        gymClass.setDate(Utils.getParsedStringFromDate(date));
+        gymClass.setBookings(new ArrayList<>());
+        return gymClass;
+    }
+
+    private boolean filterClass(String name, String date, GymClass elem) {
+        if ((Utils.isNotNullOrEmptyString(name)) && (Utils.isNotNullOrEmptyString(date))) {
+            return elem.getName().equalsIgnoreCase(name) && elem.getDate().equals(date);
+        } else if (Utils.isNotNullOrEmptyString(name)) {
+            return elem.getName().equalsIgnoreCase(name);
+        } else {
+            return elem.getDate().equals(date);
+        }
     }
 
 
