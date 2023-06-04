@@ -52,7 +52,7 @@ public class GymClassServiceImpl implements GymClassService {
     }
 
     public boolean validClassParams(ClassParams classParams) {
-        return validClassBasicParams(classParams) && validClassDateParams(classParams);
+        return validClassBasicParams(classParams) && validClassDateParamsNotNull(classParams);
     }
 
     private boolean validClassBasicParams(ClassParams classParams) {
@@ -60,9 +60,13 @@ public class GymClassServiceImpl implements GymClassService {
                 (classParams.getCapacity() != null && classParams.getCapacity() > 0);
     }
 
-    private boolean validClassDateParams(ClassParams classParams) {
-        return (Utils.isNotNullOrEmptyString(classParams.getStartDate()) && Utils.getParsedDate(classParams.getStartDate()) != null)
-                && (Utils.isNotNullOrEmptyString(classParams.getEndDate()) && Utils.getParsedDate(classParams.getEndDate()) != null);
+    private boolean validClassDateParamsNotNull(ClassParams classParams){
+        return Utils.isNotNullOrEmptyString(classParams.getStartDate()) && Utils.isNotNullOrEmptyString(classParams.getEndDate());
+    }
+
+    public boolean validClassDateParamsFormat(ClassParams classParams) {
+        return Utils.getParsedDate(classParams.getStartDate()) != null
+                && Utils.getParsedDate(classParams.getEndDate()) != null;
     }
 
     private GymClass setGymClass(ClassParams params, Date date) {

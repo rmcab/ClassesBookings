@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -26,7 +27,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private GymClass removeBooking(GymClass gymClass, String name){
-        gymClass.getBookings().remove(name);
+        gymClass.setBookings(gymClass.getBookings().stream().filter(elem -> !elem.equalsIgnoreCase(name)).collect(Collectors.toList()));
         return gymClass;
     }
 }

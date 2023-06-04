@@ -64,8 +64,11 @@ public class GymClassController {
         try {
 
             if (!service.validClassParams(classParams)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Input Format - Class name, capacity, start and end date are mandatory;" +
-                        " Expected format for dates: dd-MM-yyyy");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid Input Format - Class name, capacity, start and end date are mandatory. Capacity value must be higher than 0");
+            }
+
+            if(!service.validClassDateParamsFormat(classParams)){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Date Format - Expected format: dd-MM-yyyy");
             }
 
             Date parsedStartDate = Utils.getParsedDate(classParams.getStartDate());

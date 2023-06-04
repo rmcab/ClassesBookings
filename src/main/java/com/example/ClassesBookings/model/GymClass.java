@@ -1,5 +1,6 @@
 package com.example.ClassesBookings.model;
-import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -18,7 +19,7 @@ public class GymClass{
 
     @Schema(name = "bookings", type = "array",  description = "The class bookings")
     @JsonProperty("bookings")
-    private ArrayList<String> bookings;
+    private List<String> bookings;
 
     public GymClass(){ }
 
@@ -46,11 +47,11 @@ public class GymClass{
         this.capacity = capacity;
     }
 
-    public ArrayList<String> getBookings() {
+    public List<String> getBookings() {
         return bookings;
     }
 
-    public void setBookings(ArrayList<String> bookings) {
+    public void setBookings(List<String> bookings) {
         this.bookings = bookings;
     }
 

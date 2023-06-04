@@ -81,7 +81,7 @@ public class BookingController {
 
             GymClass classWBookingToRemove = list.get(0).getBookings() != null && list.get(0).getBookings().stream().anyMatch(elem -> elem.equalsIgnoreCase(name)) ? list.get(0) : null;
             if (classWBookingToRemove == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found - No Bookings found for " + name + "on" + date);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found - No Bookings found for  " + name + " on " + date);
             }
 
             return new ResponseEntity<>(service.deleteBooking(name, classWBookingToRemove), HttpStatus.OK);
