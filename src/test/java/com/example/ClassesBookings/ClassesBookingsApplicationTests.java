@@ -136,8 +136,8 @@ class ClassesBookingsApplicationTests {
     @Test
     public void deleteClassNotFound() {
         String requestBody = "05-07-2024";
-        ResponseEntity<String> testPostOk = mockClient.exchange("/classes", HttpMethod.DELETE, genHttpEntityJson(requestBody), String.class);
-        assertEquals("Success - DELETE a class on a day that there's no booked classes", HttpStatus.NOT_FOUND, testPostOk.getStatusCode());
+        ResponseEntity<String> testDeleteErr = mockClient.exchange("/classes", HttpMethod.DELETE, genHttpEntityJson(requestBody), String.class);
+        assertEquals("Error - DELETE a class that doesn't exist", HttpStatus.NOT_FOUND, testDeleteErr.getStatusCode());
     }
 
     @Test
@@ -158,43 +158,43 @@ class ClassesBookingsApplicationTests {
     @Test
     public void postBookingInvalidDate() {
         String requestBody = "{\"date\": \"invalid\"}";
-        ResponseEntity<String> testPostOk = mockClient.exchange("/bookings", HttpMethod.POST, genHttpEntityJson(requestBody), String.class);
-        assertEquals("Error - POST a booking without member name", HttpStatus.BAD_REQUEST, testPostOk.getStatusCode());
+        ResponseEntity<String> testPostErr = mockClient.exchange("/bookings", HttpMethod.POST, genHttpEntityJson(requestBody), String.class);
+        assertEquals("Error - POST a booking invalid date", HttpStatus.BAD_REQUEST, testPostErr.getStatusCode());
     }
 
     @Test
     public void postBookingMissingName() {
         String requestBody = "{\"date\": \"01-07-2023\"}";
-        ResponseEntity<String> testPostOk = mockClient.exchange("/bookings", HttpMethod.POST, genHttpEntityJson(requestBody), String.class);
-        assertEquals("Error - POST a booking without member name", HttpStatus.BAD_REQUEST, testPostOk.getStatusCode());
+        ResponseEntity<String> testPostErr = mockClient.exchange("/bookings", HttpMethod.POST, genHttpEntityJson(requestBody), String.class);
+        assertEquals("Error - POST a booking without member name", HttpStatus.BAD_REQUEST, testPostErr.getStatusCode());
     }
 
     @Test
     public void postBookingMissingDate() {
         String requestBody = "{\"name\": \"John Doe\"}";
-        ResponseEntity<String> testPostOk = mockClient.exchange("/bookings", HttpMethod.POST, genHttpEntityJson(requestBody), String.class);
-        assertEquals("Error - POST a booking without date", HttpStatus.BAD_REQUEST, testPostOk.getStatusCode());
+        ResponseEntity<String> testPostErr = mockClient.exchange("/bookings", HttpMethod.POST, genHttpEntityJson(requestBody), String.class);
+        assertEquals("Error - POST a booking without date", HttpStatus.BAD_REQUEST, testPostErr.getStatusCode());
     }
 
     @Test
     public void deleteBookingInvalidDate() {
         String requestBody = "{\"date\": \"invalid\"}";
-        ResponseEntity<String> testDeleteOk = mockClient.exchange("/bookings", HttpMethod.DELETE, genHttpEntityJson(requestBody), String.class);
-        assertEquals("Error - DELETE a booking without member name", HttpStatus.BAD_REQUEST, testDeleteOk.getStatusCode());
+        ResponseEntity<String> testDeleteErr = mockClient.exchange("/bookings", HttpMethod.DELETE, genHttpEntityJson(requestBody), String.class);
+        assertEquals("Error - DELETE a booking with invalid date", HttpStatus.BAD_REQUEST, testDeleteErr.getStatusCode());
     }
 
     @Test
     public void deleteBookingMissingName() {
         String requestBody = "{\"date\": \"01-07-2023\"}";
-        ResponseEntity<String> testDeleteOk = mockClient.exchange("/bookings", HttpMethod.DELETE, genHttpEntityJson(requestBody), String.class);
-        assertEquals("Error - DELETE a booking without member name", HttpStatus.BAD_REQUEST, testDeleteOk.getStatusCode());
+        ResponseEntity<String> testDeleteErr = mockClient.exchange("/bookings", HttpMethod.DELETE, genHttpEntityJson(requestBody), String.class);
+        assertEquals("Error - DELETE a booking without member name", HttpStatus.BAD_REQUEST, testDeleteErr.getStatusCode());
     }
 
     @Test
     public void deleteBookingMissingDate() {
         String requestBody = "{\"name\": \"John Doe\"}";
-        ResponseEntity<String> testDeleteOk = mockClient.exchange("/bookings", HttpMethod.DELETE, genHttpEntityJson(requestBody), String.class);
-        assertEquals("Error - DELETE a booking without a date", HttpStatus.BAD_REQUEST, testDeleteOk.getStatusCode());
+        ResponseEntity<String> testDeleteErr = mockClient.exchange("/bookings", HttpMethod.DELETE, genHttpEntityJson(requestBody), String.class);
+        assertEquals("Error - DELETE a booking without a date", HttpStatus.BAD_REQUEST, testDeleteErr.getStatusCode());
     }
 
 
